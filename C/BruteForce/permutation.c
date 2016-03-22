@@ -34,5 +34,5 @@ void printArray(char* arr, int length){
 int main(){
     char arr[] = "hello";
     int length = sizeof(arr)/sizeof(arr[0]) - 1; // -1 for Null Terminator for Strings
-    permute(arr,0,5);
+    permute(arr,0,length);
 }
