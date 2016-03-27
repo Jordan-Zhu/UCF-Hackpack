@@ -1,115 +1,87 @@
-import java.util.*;
-public class lotto{
+import java.math.BigInteger;
+import java.util.Scanner;
+import java.util.StringTokenizer;
 
-    Scanner stdin;
-    int counter;
-    int caseNum = 0;
-    int N;
-    int M;
+/**
+ * Created by Jordan on 3/26/2016.
+ */
+public class lotto {
+    public static final int MAX_N = 10;
+    public static final int MAX_M = 2000;
+    private BigInteger [][] memo;
 
-    
-    public void doit(){
-        Scanner stdin = new Scanner(System.in);
-        for (;;){
-            caseNum++;
-            counter = 0;
-            StringTokenizer strTok = new StringTokenizer(stdin.nextLine());
-            N = Integer.parseInt(strTok.nextToken());
-            M = Integer.parseInt(strTok.nextToken());
+    public static void main(String[] args)
+    {
+        Scanner in = new Scanner(System.in);
 
-            if (N == 0 && M == 0) 
+        lotto lucky = new lotto();
+        lucky.BuildTable();
+        lucky.SolveIt(in);
+    }
+
+    lotto()
+    {
+        memo = new BigInteger[MAX_N + 1][MAX_M + 1];
+        // initialize all the big nums
+        for(int i = 0; i <= MAX_N; i++)
+        {
+            for(int j = 0; j <= MAX_M; j++)
+            {
+                memo[i][j] = BigInteger.ZERO;
+            }
+        }
+    }
+
+    // Populate the global array data once, then perform lookups
+    void BuildTable()
+    {
+        BigInteger b;
+
+        // Base case: there are m lists when n = 1
+        for(int i = 0; i <= MAX_M; i++)
+        {
+            memo[1][i] = BigInteger.valueOf((long)i);
+        }
+
+        // Inductive case
+        for(int i = 2; i <= MAX_N; i++)
+        {
+            memo[i-1][0] = BigInteger.ZERO;
+            for(int j = 1; j <= MAX_M; j++)
+            {
+                memo[i][j] = BigInteger.ZERO;
+                int jj = j / 2;
+
+                for(int k = 1; k <= jj; k++)
+                {
+                    b = memo[i-1][k];
+                    b = b.subtract(memo[i-1][k-1]);
+                    b = b.multiply(BigInteger.valueOf((long)(j - 2*k + 1)));
+                    memo[i][j] = memo[i][j].add(b);
+                }
+            }
+        }
+    }
+
+    void SolveIt(Scanner in)
+    {
+        int loop = 1;
+        BigInteger b;
+
+        while(in.hasNext())
+        {
+            StringTokenizer strtok = new StringTokenizer(in.nextLine());
+            int N = Integer.parseInt(strtok.nextToken());
+            int M = Integer.parseInt(strtok.nextToken());
+
+            if((N|M) == 0)
                 break;
 
-            runCombos();
-            System.out.println("Case " + caseNum + ": n = " + N + ", m = " + M + ", # lists = " + counter);
+            b = memo[N][M];
+
+            System.out.printf("Case %d: n = %d, m = %d, # lists = %s\n", loop, N, M, b.toString());
+
+            loop++;
         }
-    }
-    
-    public void permute(int[] arr, int k){
-        for(int i = k; i < arr.length; i++){
-            arr = swap(arr, i, k);
-            permute(arr, k+1);
-            arr = swap(arr, k, i);
-        }
-
-        if (k == arr.length-1){
-            if (isCounted(arr)){
-                counter++;
-            }
-        }
-    }
-
-    public void runCombos() {
-        boolean[] items = new boolean[M];
-        combination(items, 0, M);
-    }
-
-    public void combination(boolean subset[], int k, int n) {
-        if (k == n) {
-            int[] array = getIncluded(subset);
-            if (array != null){
-                // System.out.println(Arrays.toString(array));
-                if(array.length == N){
-                    permute(array, 0);
-                }
-            }
-            
-        } else {
-            combination(subset, k+1, n);
-
-            subset[k] = true;
-            combination(subset, k+1, n);
-            subset[k] = false;
-        }
-    }
-
-    public void printSubsets(boolean subset[], int k) {
-        int[] array = getIncluded(subset);
-        if (getIncluded(subset) != null){
-            for (int i=0; i<k; i++)
-                if (subset[i]){
-                    System.out.printf("%d ", i+1);
-                }
-            System.out.println();
-        }
-    }
-
-    public int[] getIncluded(boolean subset[]){
-        int ans = 0;
-        int[] array = new int[N];
-        int n = 0;
-        try{
-            for (int i = 0; i < subset.length; i++){
-                if (subset[i]){
-                    ans++;
-                    array[n++] = i+1;
-                }
-            }
-        }catch(Exception e){
-            return null;
-        }
-        if (ans != N) return null;
-        return array;
-    }
-
-    public boolean isCounted(int[] arr){
-        for (int i = 1; i < arr.length; i++){
-            if (arr[i] < 2*arr[i-1]){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public int[] swap(int[] arr, int i, int k){
-        int tmp = arr[i];
-        arr[i] = arr[k];
-        arr[k] = tmp;
-        return arr;
-    }
-    
-
-    public static void main(String[] args){
-        new lotto().doit();
     }
 }
