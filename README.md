@@ -2,7 +2,7 @@
 <p>--- Updated 3/28/2016 ---</p>
 For COP 4516 aka Arup's Programming class. Programs to use as a reference for similar problems in competitive programming 
 
-<p><ul>TO-DO:</ul></p>
+<p><u>TO-DO:</u></p>
 <b>Graphs</b>
 - DFS / BFS
 - Dijkstra's
