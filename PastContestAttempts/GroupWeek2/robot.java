@@ -28,14 +28,14 @@ public class robot {
     {
         Scanner in = new Scanner(System.in);
 
-        int numTargets = Integer.parseInt(in.nextLine());
+        int numTargets = Integer.parseInt(in.nextLine().trim());
 
         while(numTargets > 0)
         {
             SolveIt(in, numTargets);
 
             // Read in targets for next case
-            numTargets = Integer.parseInt(in.nextLine());
+            numTargets = Integer.parseInt(in.nextLine().trim());
         }
 
     }
