@@ -1,8 +1,8 @@
 # UCF-Hackpack
---- Updated 3/28/2016 ---
+<p>--- Updated 3/28/2016 ---</p>
 For COP 4516 aka Arup's Programming class. Programs to use as a reference for similar problems in competitive programming 
 
-TO-DO:
+<p>TO-DO:</p>
 <b>Graphs</b>
 - DFS / BFS
 - Dijkstra's
