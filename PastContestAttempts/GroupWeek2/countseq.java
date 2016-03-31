@@ -5,7 +5,7 @@ import java.util.Scanner;
  */
 public class countseq {
     String seq, subseq;
-    int[][] memo;
+    long[][] memo;
 
     public static void main(String[] args)
     {
@@ -23,16 +23,16 @@ public class countseq {
 
         for(int loop = 0; loop < numCases; loop++)
         {
-            seq = in.nextLine();
-            subseq = in.nextLine();
+            seq = in.nextLine().trim();
+            subseq = in.nextLine().trim();
             System.out.println(countMatches());
         }
     }
 
-    public int countMatches()
+    public long countMatches()
     {
         // create the look-up table
-        memo = new int[seq.length()+1][subseq.length()+1];
+        memo = new long[seq.length()+1][subseq.length()+1];
 
         for(int row = 0; row < memo.length; row++)
         {
@@ -45,7 +45,7 @@ public class countseq {
         return memo[seq.length()][subseq.length()];
     }
 
-    public int countMatchesFor(int seqDigitsLeft, int subseqDigitsLeft)
+    public long countMatchesFor(int seqDigitsLeft, int subseqDigitsLeft)
     {
         // if the subsequence is empty a match is found (no letters left to match)
         // and we return 1
@@ -60,7 +60,7 @@ public class countseq {
         char currSeqDigit = seq.charAt(seq.length()-seqDigitsLeft);
         char currSubseqDigit = subseq.charAt(subseq.length()-subseqDigitsLeft);
 
-        int result = 0;
+        long result = 0;
 
         // if sequence at row row and subseq at column col start with
         // the same character, add the value found at [row-1][col-1]
@@ -73,41 +73,4 @@ public class countseq {
 
         return result;
     }
-
-//    public static int lcsdyn(String x, String y)
-//    {
-//        int i, j;
-//        int lenx = x.length();
-//        int leny = y.length();
-//        int[][] table = new int[lenx + 1][leny + 1];
-//
-//        // initialize the table that will store LCS's of all the prefix strings
-//        // this initialization case is for all empty string cases
-//        for(i = 0; i <= lenx; i++)
-//            table[i][0] = 0;
-//        for(i = 0; i <= leny; i++)
-//            table[0][i] = 0;
-//
-//        // Fill in each LCS value in order from top row to bottom row,
-//        // moving left to right
-//        for(i = 1; i <= lenx; i++)
-//        {
-//            for(j = 1; j <= leny; j++)
-//            {
-//                // if the last characters of the prefix match, add one to former value
-//                if(x.charAt(i-1) == y.charAt(j-1))
-//                    table[i][j] = 1+table[i-1][j-1];
-//
-//                // otherwise, take maximum of the two adjacent cases
-//                else
-//                    table[i][j] = Math.max(table[i][j-1], table[i-1][j]);
-//
-//                System.out.print(table[i][j]+" ");
-//            }
-//            System.out.println();
-//        }
-//
-//        // our answer
-//        return table[lenx][leny];
-//    }
 }
