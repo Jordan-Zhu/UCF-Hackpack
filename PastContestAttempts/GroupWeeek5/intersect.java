@@ -40,29 +40,32 @@ public class intersect {
 
     public static boolean intersectRayWithPlane(Vector3 R1, Vector3 R2,
                                                 Vector3 S1, Vector3 S2, Vector3 S3) {
-        // Step 1.
+        // Step 1. Find the normal to the plane.
         Vector3 dS21 = S2.sub(S1);
         Vector3 dS31 = S3.sub(S1);
         Vector3 n = dS21.cross(dS31);
 
-        // Step 2.
+        // Step 2. Compute the ray / plane intersection.
         Vector3 dR = R1.sub(R2);
 
         float ndotdR = n.dot(dR);
 
         if (Math.abs(ndotdR) < 1e-6f) { // Choose your tolerance
+            System.out.println("There is no intersection.");
             return false;
         }
 
+        // Else we can find the 3D coordinates of the point of intersection M.
         float t = -n.dot(R1.sub(S1)) / ndotdR;
         Vector3 M = R1.add(dR.scale(t));
 
-        // Step 3.
+        // Step 3. Project the vector M - S1 onto the two vectors S2 - S1 and S3 - S1.
         Vector3 dMS1 = M.sub(S1);
         float u = dMS1.dot(dS21);
         float v = dMS1.dot(dS31);
 
-        // Step 4.
+        // Step 4. If these pass then the point of intersection M lies inside the plane,
+        // else it's outside.
         return (u >= 0.0f && u <= dS21.dot(dS21)
                 && v >= 0.0f && v <= dS31.dot(dS31));
 
@@ -104,6 +107,7 @@ public class intersect {
             Vector3 S3 = new Vector3(x5, y5, z5);
 
             boolean b = intersectRayWithPlane(R1, R2, S1, S2, S3);
+//            assert b;
             System.out.printf("Data Set #%d: %s\n", loop, b);
 
         }
