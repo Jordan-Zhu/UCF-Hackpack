@@ -1,12 +1,12 @@
 import java.util.*;
-public class TopologicalSort{
+public class DFS{
 
-    public static void topologicalSort(Graph graph){
+    public static void dfs(Graph graph){
         Stack<Integer> stack = new Stack<Integer>();
-        stack.push(0);
+        stack.push(4);
         boolean[] visited = new boolean[graph.vertices.length];
-        visited[0] = true;
-        Vertex[] vertices = graph.vertices;
+        visited[4] = true;
+        List<Integer>[] vertices = graph.vertices;
         while (!stack.isEmpty()){
             int currVertex = stack.pop();
             // Process here.
@@ -36,7 +36,7 @@ public class TopologicalSort{
         matrix[4][5] = true;
         matrix[5][4] = true;
         Graph graph = new Graph(matrix); 
-        topologicalSort(graph);
+        dfs(graph);
     }
 }
 
@@ -48,7 +48,7 @@ class Graph{
     }
 
     public Vertex[] graphFromAdjacencyMatrix(boolean[][] matrix){
-        //Add all vertices
+        //Add all vertices with its edges stored internally.
         Vertex[] list = new Vertex[matrix.length];
         for (int vertex = 0; vertex < matrix.length; vertex++){
             Vertex newVertex = new Vertex(); 
@@ -63,11 +63,10 @@ class Graph{
         // We reverse the order of the edges so that the dfs works as a topological sort.
         // It makes the stack process vertex A before Vertex B if 
         // encountered at the same time. (Lexicographical Order)
-        for (Vertex v : list){
-            Collections.reverse(v);
+        for (Vertex edges : list){
+            Collections.reverse(edges);
         }
         return list;
-        
     }
 }
 

@@ -1,20 +1,19 @@
 import java.util.*;
-public class TopologicalSort{
+public class BFS{
 
-    public static void topologicalSort(Graph graph){
-        Stack<Integer> stack = new Stack<Integer>();
-        stack.push(0);
+    public static void bfs(Graph graph){
+        Queue<Integer> queue = new LinkedList<Integer>(); 
+        queue.add(0);
         boolean[] visited = new boolean[graph.vertices.length];
         visited[0] = true;
-        Vertex[] vertices = graph.vertices;
-        while (!stack.isEmpty()){
-            int currVertex = stack.pop();
+        while (!queue.isEmpty()){
+            int currVertex = queue.remove();
             // Process here.
             System.out.println("Vertex: " + currVertex + 
-                    ", Edges: " + vertices[currVertex].toString());
-            for (Integer i : vertices[currVertex]){
+                    ", Edges: " + graph.vertices[currVertex].toString());
+            for (Integer i : graph.vertices[currVertex]){
                 if (!visited[i]){
-                    stack.push(i);
+                    queue.add(i);
                     visited[i] = true;
                 }
             }
@@ -36,7 +35,7 @@ public class TopologicalSort{
         matrix[4][5] = true;
         matrix[5][4] = true;
         Graph graph = new Graph(matrix); 
-        topologicalSort(graph);
+        bfs(graph);
     }
 }
 
@@ -59,15 +58,7 @@ class Graph{
             }
             list[vertex] = newVertex;
         } 
-
-        // We reverse the order of the edges so that the dfs works as a topological sort.
-        // It makes the stack process vertex A before Vertex B if 
-        // encountered at the same time. (Lexicographical Order)
-        for (Vertex v : list){
-            Collections.reverse(v);
-        }
         return list;
-        
     }
 }
 
