@@ -1,6 +1,6 @@
 Problems
-- Balloons
-- Bullseye
-- Generations
-- Haircut	
-- Tri
+- Balloons (Banger)
+- Bullseye (Binary Search)
+- Generations (Fibonacci)
+- Haircut	(Binary Search)
+- Tri (DP or Dijkstra)
