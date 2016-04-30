@@ -11,16 +11,13 @@ public static void main (String[] args)
 	Scanner en = new Scanner(System.in);
 	 vert = en.nextInt();
 	G = new int [vert][vert];
-	//for(int i = 0;i<vert;i++)
-	//{
-		//for(int j = 0; j<vert;j++)
-		//{
+
 			G   =new int[][] {  {0,oo,3,0},
 					{ -2,0,oo,1},
 					{ oo,oo,0,5},
 					 {oo,4,oo,0}};
-		//}
-//	}
+		
+
 	floyd();
 	for(int start =0 ; start<vert;start++)
 	{
