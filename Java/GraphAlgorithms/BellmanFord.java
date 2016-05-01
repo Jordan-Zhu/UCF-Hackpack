@@ -1,11 +1,9 @@
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Stack;
 
 /**
  * Bellman-Ford Algorithm: This algorithm is useful when the graph is sparse, has negative
  * edge weights and you only need distances from one vertex.
- * This algorithm finds shortest distances from a source vertex
+ * Bellman-Ford finds shortest distances from a source vertex
  * for directed graphs with or without negative edge weights.
  */
 public class BellmanFord {
@@ -77,10 +75,6 @@ public class BellmanFord {
 
         // We are already at our source vertex.
         estimates[source] = 0;
-
-//        Stack<Integer> stack = new Stack<Integer>();
-//        stack.push(0);
-//        Vertex[] vertices = graph.vertices;
 
         // Runs v-1 times since the max number of edges on any shortest path is
         // v-1, if there are no negative weight cycles.
