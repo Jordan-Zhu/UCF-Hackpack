@@ -32,33 +32,6 @@ public class BellmanFord {
         BellmanFord bellmanford = new BellmanFord(graph);
 
         bellmanford.printShortestPath(bellmanford.run(0));
-
-
-//        Scanner fin = new Scanner(System.in);
-//        int numEdges = 0;
-//        for(int i = 0; i < 25; i++) {
-//            adj[i/5][i%5] = fin.nextInt();
-//            // These are the vertices.
-//            if (adj[i/5][i%5] != 0) {
-//                numEdges++;
-//            }
-//        }
-
-        // Form edge list.
-//        Edge[] eList = new Edge[numEdges];
-//        int eCnt = 0;
-//        for(int i = 0; i < 25; i++) {
-//            if (adj[i/5][i%5] != 0) {
-//                eList[eCnt++] = new Edge(i/5, i%5, adj[i/5][i%5]);
-//            }
-//        }
-
-        // Run algorithm and print out shortest distances.
-//        int[] answers = bellmanford(eList, 5, 0);
-//        for(int i = 0; i < 5; i++) {
-//            System.out.print(answers[i] + " ");
-//        }
-//        System.out.println();
     }
 
     public int[] run(int source) {
