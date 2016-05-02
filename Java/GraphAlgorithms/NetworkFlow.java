@@ -1,75 +1,202 @@
 import java.util.*;
 public class NetworkFlow{
 
-    public static void maxFlow(Graph graph){
+    private final static boolean DEBUG = false;
+    private final static boolean PRINTPATH = false; 
 
-        for (Vertex v : graph.vertices){
-            System.out.print(v.label + " ");
-        }
-        for (Edge e : graph.edges){
-            System.out.println("S: " + e.source + ", D: " + e.destination + ", C: " +e.capacity);
-        }
-    }
+    private Edge[][] adjMat;
+    private int source;
+    private int destination;
 
-    public static void main(String[] args){
-        int[][] matrix = new int[6][6];
+    NetworkFlow(int[][] matrix, int start, int end){
+        source = start;
+        destination = end;
+        adjMat = new Edge[matrix.length][matrix.length];
 
-        matrix[0][1] = 40;  // 00 40 68 00 00 00
-        matrix[0][2] = 68;  // 00 00 00 12 00 00
-        matrix[1][3] = 12;  // 00 00 00 86 00 00
-        matrix[2][3] = 86;  // 00 00 00 00 44 00
-        matrix[3][4] = 44;  // 00 00 00 00 00 52 
-        matrix[4][5] = 52;  // 00 00 00 00 00 00
-                            
-        Graph graph = new Graph(matrix); 
-        maxFlow(graph);
-    }
-}
-
-class Graph{
-
-    Vertex[] vertices;
-    ArrayList<Edge> edges;
-
-    Graph(int[][] matrix){
-        initFromAdjacencyMatrix(matrix);
-    }
-
-    public void initFromAdjacencyMatrix(int[][] matrix){
-        //Add all vertices with its edges stored internally.
-        vertices = new Vertex[matrix.length];
-        edges = new ArrayList<Edge>();
         for (int i = 0; i < matrix.length; i++){
-            vertices[i] = new Vertex();
             for (int j = 0; j < matrix[i].length; j++){
-                if (matrix[i][j] != 0){
-                    edges.add(new Edge(i,j,matrix[i][j]));
+                if (matrix[i][j] > 0){
+                    adjMat[i][j] = new Edge(matrix[i][j]);
+                }else{
+                    adjMat[i][j] = null;
                 }
             }
         }
     }
 
+    public ArrayList<Direction> findAugmentingPath(){
+        Direction[] prev = new Direction[adjMat.length];
+        boolean[] inQueue = new boolean[adjMat.length];
+
+        prev[source] = new Direction(-1, true);
+
+        Queue<Integer> bfs_queue = new LinkedList<Integer>();
+        bfs_queue.offer(new Integer(source));
+        inQueue[source] = true;
+
+        while(!bfs_queue.isEmpty()){
+            int next = bfs_queue.poll();
+
+            // Add forward edges to queue.
+            for (int i = 0; i < adjMat.length; i++){
+                if (!inQueue[i] && adjMat[next][i] != null && adjMat[next][i].maxPushForward() > 0){
+                    bfs_queue.offer(new Integer(i));
+                    inQueue[i] = true;
+                    prev[i] = new Direction(next, true);
+                }
+            }
+
+            // Add backward edges
+            for (int i = 0; i < adjMat.length; i++){
+                if (!inQueue[i] && adjMat[i][next] != null && adjMat[i][next].maxPushBackward() > 0){
+                    bfs_queue.offer(new Integer(i));
+                    inQueue[i] = true;
+                    prev[i] = new Direction(next, false);
+                }
+            }
+        }
+
+        if (!inQueue[destination]){
+            return null;
+        }
+
+        ArrayList<Direction> path = new ArrayList<Direction>();
+        Direction place = prev[destination];
+        Direction dummy = new Direction(destination, true);
+        path.add(dummy);
+         
+        // Build the path backwards.
+        while(place.previous != -1){
+            path.add(place);
+            place = prev[place.previous];
+        }
+
+        Collections.reverse(path);
+        return path;
+    }
+
+    public int getMaxFlow(){
+        int flow = 0;
+
+        ArrayList<Direction> nextPath = findAugmentingPath();
+
+        if (DEBUG || PRINTPATH){
+            System.out.println("Found one augmenting path.");
+            for (int i = 0; i < nextPath.size(); i++){
+                System.out.print(nextPath.get(i)+" ");
+            }
+            System.out.println();
+        }
+
+        while (nextPath != null){
+            int thisFlow = Integer.MAX_VALUE;
+            for (int i = 0; i < nextPath.size()-1; i++){
+                if (nextPath.get(i).forward){
+                    thisFlow = Math.min(thisFlow, 
+                            adjMat[nextPath.get(i).previous][nextPath.get(i+1).previous].maxPushForward());
+                }else{
+                    thisFlow = Math.min(thisFlow, 
+                            adjMat[nextPath.get(i+1).previous][nextPath.get(i).previous].maxPushBackward());
+                }
+            }
+
+            for (int i = 0; i < nextPath.size()-1; i++){
+                if (nextPath.get(i).forward){
+                    adjMat[nextPath.get(i).previous][nextPath.get(i+1).previous].pushForward(thisFlow);
+                }else{
+                    adjMat[nextPath.get(i+1).previous][nextPath.get(i).previous].pushBack(thisFlow);
+                }
+            }
+
+            if (DEBUG || PRINTPATH){
+                System.out.println("Adding " + thisFlow);
+            }
+
+            flow += thisFlow;
+            nextPath = findAugmentingPath();
+            if (nextPath != null && (DEBUG || PRINTPATH)) {
+                System.out.println("Found another augmenting path.");
+                for (int i = 0; i < nextPath.size(); i++){
+                    System.out.print(nextPath.get(i) + " ");
+                }
+                System.out.println();
+            }
+        }
+        return flow;
+    }
+
+    public static void main(String[] args){
+        int[][] matrix = new int[6][6];
+
+        matrix[0][1] = 16;
+        matrix[0][2] = 13;
+        matrix[1][2] = 10;
+        matrix[2][1] =  4;
+        matrix[1][3] = 12;
+        matrix[3][2] =  9;
+        matrix[2][4] = 14;
+        matrix[3][5] = 20;
+        matrix[4][3] =  7;
+        matrix[4][5] =  4;
+    
+        NetworkFlow networkFlow = new NetworkFlow(matrix, 0, 5);
+        int answer = networkFlow.getMaxFlow();
+        System.out.println("The flow is " + answer);
+                            
+    }
 }
 
-class Vertex{
-    String label;
-    static int id = 65; // Ascii value auto increment
+class Direction{
+    int previous;
+    boolean forward;
 
-    Vertex(){
-        label = ((char)id++) + "";
+    Direction(int previousNode, boolean dir){
+        this.previous = previousNode;
+        this.forward = dir;
+    }
+
+    public String toString(){
+        if (forward){
+            return "" + previous + "->";
+        }else{
+            return "" + previous + "<-";
+        }
     }
 }
 
 class Edge{
-    int source;
-    int destination; 
     int capacity;
+    int flow;
 
-    Edge(int source, int destination, int capacity){
-        this.source = source;
-        this.destination = destination;
+    Edge(int capacity){
         this.capacity = capacity; 
+        this.flow = 0;
+    }
+
+    public int maxPushForward(){
+        return capacity - flow;
+    }
+
+    public int maxPushBackward(){
+        return flow;
+    }
+
+    public boolean pushForward(int moreFlow){
+        if (flow+moreFlow <= capacity){
+            flow += moreFlow;
+            return true;
+        }
+        return false;
+    }
+
+    public boolean pushBack(int lessFlow){
+        if (lessFlow > flow){
+            flow -= lessFlow;
+            return true;
+        }
+        return false;
     }
 }
+
 
 
