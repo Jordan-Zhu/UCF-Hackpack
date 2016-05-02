@@ -8,7 +8,7 @@ public class ConvexHull {
     public static void main(String[] args) {
         int n = 5;
         pt[] pts = new pt[n];
-        for(int i = 0; i < n; i++) {
+        for (int i = 0; i < n; i++) {
             int x = 1;
             int y = 2;
             pts[i] = new pt(x, y);
@@ -27,7 +27,7 @@ public class ConvexHull {
     // Returns the point in pts with minimum y breaking tie by minimum x.
     public static int getIndexMin(pt[] pts) {
         int best = 0;
-        for (int i=1; i<pts.length; i++)
+        for (int i = 1; i < pts.length; i++)
             if (pts[i].y < pts[best].y || (pts[i].y == pts[best].y && pts[i].x < pts[best].x))
                 best = i;
         return best;
@@ -44,14 +44,14 @@ public class ConvexHull {
         myStack.push(pts[1]);
 
         // Go through the rest of the points.
-        for(int i = 2; i < n; i++) {
+        for (int i = 2; i < n; i++) {
             // Get last three points.
             pt cur = pts[i];
             pt mid = myStack.pop();
             pt prev = myStack.pop();
 
             // Pop off the left turns.
-            while(!prev.isRightTurn(mid, cur)) {
+            while (!prev.isRightTurn(mid, cur)) {
                 mid = prev;
                 prev = myStack.pop();
             }
@@ -65,7 +65,7 @@ public class ConvexHull {
         // Add up distances around the hull.
         double res = 0;
         pt cur = pts[0];
-        while(myStack.size() > 0) {
+        while (myStack.size() > 0) {
             pt next = myStack.pop();
             res += cur.dist(next);
             cur = next;
@@ -100,9 +100,9 @@ class pt implements Comparable<pt> {
         if (this.equals(origin))
             return 0;
         else {
-            double tmp = Math.atan2(this.y-origin.y, this.x-origin.x);
+            double tmp = Math.atan2(this.y - origin.y, this.x - origin.x);
             if (tmp <= 0)
-                tmp += (2*Math.PI);
+                tmp += (2 * Math.PI);
 
             return tmp;
         }
@@ -110,17 +110,17 @@ class pt implements Comparable<pt> {
 
     // Returns the vector from this to other.
     public pt getVect(pt other) {
-        return new pt(other.x-x, other.y-y);
+        return new pt(other.x - x, other.y - y);
     }
 
     // Returns the distance between this and other.
     public double dist(pt other) {
-        return Math.sqrt((other.x-x)*(other.x-x) + (other.y-y)*(other.y-y));
+        return Math.sqrt((other.x - x) * (other.x - x) + (other.y - y) * (other.y - y));
     }
 
     // Returns the magnitude ot this cross product other.
     public int crossProductMag(pt other) {
-        return this.x*other.y - other.x*this.y;
+        return this.x * other.y - other.x * this.y;
     }
 
     // returns true iff this to mid to next is a right turn (180 degree is considered right turn).
@@ -155,6 +155,6 @@ class pt implements Comparable<pt> {
     }
 
     public String toString() {
-        return x+" "+y;
+        return x + " " + y;
     }
 }
