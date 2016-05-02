@@ -1,12 +1,11 @@
 /**
  * 2D Geometry functions: Tests line intersection, parallel line intersection,
  * area of triangle, and area between vectors.
- *
+ * <p>
  * TO-DO: Circle-line segment intersection.
  */
 public class geo2d {
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         pt2D a = new pt2D(3.0, 7.0);
         pt2D b = new pt2D(-4.0, 6.0);
         pt2D c = new pt2D(10.0, 2.0);
@@ -15,7 +14,7 @@ public class geo2d {
         // find area of triangle abc, via vectors.
         vect2D v1 = new vect2D(a, b);
         vect2D v2 = new vect2D(a, c);
-        System.out.printf("The area of triangle ABC is %.3f.\n", v1.crossMag(v2)/2);
+        System.out.printf("The area of triangle ABC is %.3f.\n", v1.crossMag(v2) / 2);
 
         // Find the angle between the two vectors.
         System.out.printf("The angle between the vectors is %.3f radians.\n", v1.angle(v2));
@@ -90,7 +89,7 @@ class line {
 
     public pt2D intersect(line other) {
         double den = det(dir.x, -other.dir.x, dir.y, -other.dir.y);
-        if(Math.abs(den) < EPSILON) {
+        if (Math.abs(den) < EPSILON) {
             return null;
         }
 
@@ -117,6 +116,7 @@ class line {
     }
 
 }
+
 class pt2D {
 
     public double x;
