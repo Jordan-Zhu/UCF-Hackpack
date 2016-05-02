@@ -3,11 +3,11 @@ public class LongestCommonSubsequence{
     String one = " in ni nat jag dep y togo il ru pur de tuh huh jon stewart";
 	String two = " nat in jag dep huh tuh il de tuh de huh jon y stewart";
 	System.out.print("LCSS:");
-	int temp=EditDistances2(one,two);
+	int temp=common(one,two);
 	System.out.print("\nLCSS:"+temp);
 }
 	
-	static int EditDistances2(String one,String two)
+	static int common(String one,String two)
 	{
 		String[] words = one.split(" ");
 		String[] words2 = two.split(" ");
